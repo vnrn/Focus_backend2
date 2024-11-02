@@ -1,0 +1,2 @@
+"use strict";
+// GET AND POST ENDPOINTS HERE
