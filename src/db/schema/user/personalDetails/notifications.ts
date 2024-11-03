@@ -20,7 +20,6 @@ export const notificationTypeEnum = FOCUS.enum("notification_type", [
   "system_update",
   "success",
   "warning",
-  "email_verify",
   "trial_expiration"
 ]);
 

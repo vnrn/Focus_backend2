@@ -15,7 +15,7 @@ export const trailsTable = FOCUS.table("trails", {
   trail_start: timestamp("trail_start", { withTimezone: true })
     .notNull()
     .defaultNow(),
-  trail_end: timestamp("trail_end", { withTimezone: true })
+  trail_end: timestamp("trail_end", { withTimezone: true }).notNull()
 });
 
 export default trailsTable;

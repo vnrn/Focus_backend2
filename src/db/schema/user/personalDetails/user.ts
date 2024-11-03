@@ -27,6 +27,7 @@ export const usersTable = FOCUS.table(
     //timestamps,
     verifiedAt: timestamp("verified_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
     updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
       () => new Date()
     )
