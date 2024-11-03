@@ -11,7 +11,7 @@ export default async function SignUpValidation(
     username: z
       .string({ message: "please, enter your username" })
       .min(3, { message: "sorry, Username must be at least 3 characters" })
-      .max(20, { message: "sorry, Username cannot exceed 20 characters" })
+      .max(30, { message: "sorry, Username cannot exceed 20 characters" })
       .regex(/^[a-zA-Z0-9_]+$/, {
         message:
           "sorry, Username can only contain letters, numbers, and underscores"

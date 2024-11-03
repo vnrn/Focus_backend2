@@ -17,7 +17,8 @@ export default async function SignUpHandler(req: Request, res: Response) {
           eq(usersTable.username, username),
           and(eq(usersTable.email, email), eq(usersTable.provider, "local"))
         )
-      );
+      )
+      .limit(1);
 
     if (IsUserExists.length > 0) {
       const isEmailExists = IsUserExists[0].email === email;

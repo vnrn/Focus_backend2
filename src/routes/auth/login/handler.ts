@@ -31,7 +31,7 @@ export default async function LoginHandler(req: Request, res: Response) {
       .limit(1);
 
     if (user.length < 1) {
-      return res.status(400).json({
+      res.status(400).json({
         from: APP_NAME,
         errors: [
           {
@@ -41,6 +41,7 @@ export default async function LoginHandler(req: Request, res: Response) {
           }
         ]
       });
+      return;
     }
 
     const isPasswordCorrect = await bcrypt.compare(
@@ -48,7 +49,7 @@ export default async function LoginHandler(req: Request, res: Response) {
       user[0].password as string
     );
     if (!isPasswordCorrect) {
-      return res.status(400).json({
+      res.status(400).json({
         from: APP_NAME,
         errors: [
           {
@@ -57,6 +58,7 @@ export default async function LoginHandler(req: Request, res: Response) {
           }
         ]
       });
+      return;
     }
 
     const refreshToken = jwt.sign(
@@ -78,7 +80,9 @@ export default async function LoginHandler(req: Request, res: Response) {
         refreshToken
       }
     });
+    return;
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       from: APP_NAME,
       errors: [
@@ -88,5 +92,6 @@ export default async function LoginHandler(req: Request, res: Response) {
         }
       ]
     });
+    return;
   }
 }
