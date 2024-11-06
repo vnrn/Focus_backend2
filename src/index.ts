@@ -1,14 +1,8 @@
-import cluster from "cluster";
-import { cpus } from "os";
 import express, { Router } from "express";
 import db from "./db/connect";
-const numCPUs = cpus().length;
-const port = 3000;
-
-import "./db/connect";
-import "./redis/redisConnect";
+const port = (process.env.PORT as string) || 3001;
 import cookieParser from "cookie-parser";
-import { RedisClient } from "./redis/redisConnect";
+import { RedisClient } from "./db/connect";
 
 //routes
 import AuthRouter from "./routes/auth";
@@ -60,20 +54,4 @@ app.get("/status", async (req, res) => {
   }
 });
 
-if (cluster.isPrimary) {
-  for (let i = 0; i < numCPUs; i++) {
-    cluster.fork();
-  }
-} else {
-  SERVER();
-}
-
-async function SERVER() {
-  try {
-    mainServer.listen(port, () => {
-      // console.log(`Worker ${process.pid} listening on port ${port}`);
-    });
-  } catch (error) {
-    console.log(error);
-  }
-}
+mainServer.listen(port);

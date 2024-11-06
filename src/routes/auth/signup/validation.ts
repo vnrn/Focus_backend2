@@ -35,7 +35,7 @@ export default async function SignUpValidation(
   } catch (error) {
     if (error instanceof z.ZodError) {
       const formattedErrors = error.errors.map((err) => ({
-        path: err.path,
+        field: err.path[0],
         message: err.message
       }));
       res.status(400).json({

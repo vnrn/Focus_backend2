@@ -1,8 +1,7 @@
 import Bull from "bull";
-import { RedisClient } from "../redis/redisConnect";
 import jwt from "jsonwebtoken";
 import sendEmail from "../utils/email/sender";
-import db from "../db/connect";
+import db, { RedisClient } from "../db/connect";
 import {
   profilesTable,
   settingsTable,
@@ -10,8 +9,27 @@ import {
   usersTable
 } from "../db/schema";
 import { getFutureDate } from "../routes/auth/functions/dates";
+var settings = {
+  // lockDuration: 30000, // Key expiration time for job locks.
+  // lockRenewTime: 15000, // Interval on which to acquire the job lock
+  // maxStalledCount: 1, // Max amount of times a stalled job will be re-processed.
+  // retryProcessDelay: 5000, // delay before processing next job in case of internal error.
+  // backoffStrategies: {}, // A set of custom backoff strategies keyed by name.
+  stalledInterval: 300000, // How often check for stalled jobs (use 0 for never checking).
+  guardInterval: 300000, // Poll interval for delayed jobs and added jobs.
+  drainDelay: 300 // A timeout for when the queue is in drained state (empty waiting for jobs).
+};
 
-let reconnectingEvent = false;
+import Redis from "ioredis";
+
+// const client = new Redis(
+//   "rediss://default:AWlYAAIjcDEwNjQ4YjdmNDk1NjY0ODIzOTFkMWNiNmIzOGRkZGFhNHAxMA@fancy-sparrow-26968.upstash.io:6379",
+//   {
+//     maxRetriesPerRequest: null,
+//     enableReadyCheck: false
+//   }
+// );
+
 const signupQueue = new Bull(
   "signupQueue",
   process.env.REDIS_URL_BULL as string
@@ -19,6 +37,7 @@ const signupQueue = new Bull(
 
 signupQueue.process(async (jop, done) => {
   const { email, userId } = jop.data;
+  console.log("Processing signup queue:", jop.data);
   try {
     const verifyToken = jwt.sign(
       { type: "verify", userId: userId, provider: "local" },

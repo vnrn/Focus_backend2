@@ -8,6 +8,7 @@ import signupQueue from "../../../queues/signupQueue";
 
 export default async function SignUpHandler(req: Request, res: Response) {
   const { username, email, password } = req.body;
+  console.log(req.body);
   try {
     const IsUserExists = await db
       .select()
@@ -54,18 +55,23 @@ export default async function SignUpHandler(req: Request, res: Response) {
       });
 
     //run queue here
-    await signupQueue.add(
-      { email, userId: user[0].id },
-      {
-        attempts: 3,
-        backoff: {
-          type: "exponential",
-          delay: 5000
-        },
-        removeOnComplete: true,
-        removeOnFail: true
-      }
-    );
+    await signupQueue
+      .add(
+        { email, userId: user[0].id },
+        {
+          attempts: 3,
+          backoff: {
+            type: "exponential",
+            delay: 5000
+          },
+          removeOnComplete: true,
+          removeOnFail: true
+        }
+      )
+      .then((e) => {
+        console.log(e);
+      })
+      .catch((e) => console.log(e));
     res.status(201).json({
       from: process.env.APP_NAME as string,
       data: {
