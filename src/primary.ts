@@ -5,7 +5,6 @@ import "./db/connect";
 import "./redis/redisConnect";
 
 if (cluster.isPrimary) {
-  // Log "started" only once, when the cluster starts
   console.log("Focus Backend started on " + numCPUs + " CPUs Cores ✅");
 
   cluster.setupPrimary({
@@ -18,9 +17,8 @@ if (cluster.isPrimary) {
 
   cluster.on("exit", (worker, code, signal) => {
     console.log(`worker ${worker.process.pid} died`);
-    cluster.fork(); // Restart worker if it dies
+    cluster.fork();
   });
 } else {
-  // Workers can share the same server
   require(__dirname + "/index.js");
 }

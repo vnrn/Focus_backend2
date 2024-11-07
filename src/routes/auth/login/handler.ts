@@ -54,7 +54,7 @@ export default async function LoginHandler(req: Request, res: Response) {
         errors: [
           {
             field: "password",
-            message: "Sorry, password is incorrect."
+            message: "Sorry, your password is incorrect. Please try again."
           }
         ]
       });
@@ -73,13 +73,18 @@ export default async function LoginHandler(req: Request, res: Response) {
       .set({ refreshToken, lastLoginAt: new Date() })
       .where(eq(usersTable.id, user[0].id));
 
-    res.cookie("refToken", refreshToken).status(200).json({
-      from: APP_NAME,
-      data: {
-        accessToken,
-        refreshToken
-      }
-    });
+    res
+      .cookie("refToken", refreshToken)
+      .cookie("accessToken", accessToken)
+      .cookie("prov", "local")
+      .status(200)
+      .json({
+        from: APP_NAME,
+        data: {
+          accessToken,
+          refreshToken
+        }
+      });
     return;
   } catch (error) {
     console.log(error);

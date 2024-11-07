@@ -68,10 +68,7 @@ export default async function SignUpHandler(req: Request, res: Response) {
           removeOnFail: true
         }
       )
-      .then((e) => {
-        console.log(e);
-      })
-      .catch((e) => console.log(e));
+      .catch((e) => console.log(`faild pushing the process to signup queue`));
     res.status(201).json({
       from: process.env.APP_NAME as string,
       data: {

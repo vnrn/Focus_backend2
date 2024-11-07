@@ -13,6 +13,7 @@ import {
 } from "./reset-password/handler";
 import ResetPasswordValidation from "./reset-password/validation";
 import { GoogleOauthHandler } from "./oauth/google/handler";
+import GithubOauthHandler from "./oauth/github/handler";
 
 const limiter = rateLimit({
   windowMs: 60000,
@@ -50,6 +51,7 @@ AuthRouter.post(
 
 // oauth providers
 
-AuthRouter.post("/oauth/google", GoogleOauthHandler);
+AuthRouter.get("/oauth/google", GoogleOauthHandler);
+AuthRouter.get("/oauth/github", GithubOauthHandler);
 
 export default AuthRouter;

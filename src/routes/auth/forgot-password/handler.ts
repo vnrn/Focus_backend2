@@ -37,7 +37,7 @@ export default async function forgotPasswordHandler(
           errorType: process.env.APP_NAME,
           errors: [
             {
-              field: "general",
+              field: "usernameOrEmail",
               message: `Sorry, we couldn't find an account with that ${
                 isItEmail ? "email" : "username"
               }.`
@@ -60,10 +60,10 @@ export default async function forgotPasswordHandler(
         .set({ resetPasswordToken })
         .where(eq(usersTable.id, user[0].id));
 
-      sendEmail(
+      await sendEmail(
         [user[0].email as string],
         "Reset Your Password",
-        `<a href="${process.env.FRONT_END_BASE}/auth/reset-password?token=${resetPasswordToken}">Click here to reset your password</a>`
+        `<a href="${process.env.FRONTEND_BASE}/auth/reset-password?token=${resetPasswordToken}">Click here to reset your password</a>`
       );
 
       res.status(200).json({

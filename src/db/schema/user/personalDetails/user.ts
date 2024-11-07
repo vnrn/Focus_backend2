@@ -18,9 +18,10 @@ export const usersTable = FOCUS.table(
     email: varchar("email", { length: 255 }),
     password: text("password"),
     provider: providerEnum("provider").default("local").notNull(),
-    providerId: varchar("provider_id", { length: 255 }),
+    providerId: text("provider_id"),
     //tokens
     refreshToken: text("refresh_token"),
+    accessToken: text("access_token"),
     verifyToken: text("verify_token"),
     resetPasswordToken: text("reset_password_token"),
     accountDeleteToken: text("account_delete_token"),
@@ -34,7 +35,13 @@ export const usersTable = FOCUS.table(
   },
   (t) => {
     return {
-      usernameIndex: index("username_index_on_users").on(t.username)
+      usernameIndex: index("username_index_on_users").on(t.username),
+      emailIndex: index("email_index_on_users").on(t.email),
+      refreshTokenIndex: index("refresh_token_index_on_users").on(
+        t.refreshToken
+      ),
+      accessTokenIndex: index("access_token_index_on_users").on(t.accessToken),
+      providerIdIndex: index("provider_id_index_on_users").on(t.providerId)
     };
   }
 );

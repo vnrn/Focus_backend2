@@ -37,7 +37,6 @@ const signupQueue = new Bull(
 
 signupQueue.process(async (jop, done) => {
   const { email, userId } = jop.data;
-  console.log("Processing signup queue:", jop.data);
   try {
     const verifyToken = jwt.sign(
       { type: "verify", userId: userId, provider: "local" },

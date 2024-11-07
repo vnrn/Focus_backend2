@@ -14,13 +14,7 @@ export default async function LoginValidation(
         message: "sorry, Username or Email must be at least 3 characters"
       })
       .max(30, { message: "sorry, Username cannot exceed 20 characters" }),
-    password: z
-      .string({ message: "please, enter your password" })
-      .min(8, { message: "sorry, Password must be at least 8 characters" })
-      .regex(/[0-9]/, { message: "Password must contain at least one number" })
-      .regex(/[^a-zA-Z0-9]/, {
-        message: "Password must contain at least one special character"
-      })
+    password: z.string({ message: "please, enter your password" })
   });
 
   try {
@@ -30,7 +24,7 @@ export default async function LoginValidation(
   } catch (error) {
     if (error instanceof z.ZodError) {
       const formattedErrors = error.errors.map((err) => ({
-        path: err.path,
+        field: err.path[0],
         message: err.message
       }));
       res.status(400).json({
